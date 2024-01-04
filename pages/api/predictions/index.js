@@ -23,26 +23,39 @@ export default async function handler(req, res) {
   );
 
   let prediction
-  if (process.env.USE_REPLICATE_DEPLOYMENT) {
-    console.log("Using deployment")
-    prediction = await replicate.deployments.predictions.create(
-      "replicate",
-      "paint-by-text",
-      {
-        input: req.body
-      }
-    );
-  } else {
-    console.log("Not using deployment")
-    // https://replicate.com/timothybrooks/instruct-pix2pix/versions
-    const version = "30c1d0b916a6f8efce20493f5d61ee27491ab2a60437c13c588468b9810ec23f"
-    prediction = await replicate.predictions.create({
-      version, 
-      input: req.body
-    });
+  const response = await fetch(`${API_HOST}/v1/predictions/123`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Token ${process.env.REPLICATE_API_TOKEN}`,
+      "Content-Type": "application/json"
+    },
+    body:  JSON.stringify({ input: req.body })
+  });
+  if (response.status !== 200) {
+    let error = await response.json();
+    res.statusCode = 500;
+    res.end(JSON.stringify({ detail: error.detail }));
+    return;
   }
-
-  console.log({prediction});
+  prediction = await response.json();
+  // if (process.env.USE_REPLICATE_DEPLOYMENT) {
+  //   console.log("Using deployment")
+  //   prediction = await replicate.deployments.predictions.create(
+  //     "replicate",
+  //     "paint-by-text",
+  //     {
+  //       input: req.body
+  //     }
+  //   );
+  // } else {
+  //   console.log("Not using deployment")
+  //   // https://replicate.com/timothybrooks/instruct-pix2pix/versions
+  //   const version = "30c1d0b916a6f8efce20493f5d61ee27491ab2a60437c13c588468b9810ec23f"
+  //   prediction = await replicate.predictions.create({
+  //     version,
+  //     input: req.body
+  //   });
+  // }
 
   res.statusCode = 201;
   res.end(JSON.stringify(prediction));

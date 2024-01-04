@@ -10,8 +10,8 @@ import { getRandomSeed } from "lib/seeds";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-export const appName = "Paint by Text";
-export const appSubtitle = "Edit your photos using written instructions, with the help of an AI.";
+export const appName = "美女脱脱脱";
+export const appSubtitle = "上传美女照片，AI帮你脱衣服";
 export const appMetaDescription = "Edit your photos using written instructions, with the help of an AI.";
 
 export default function Home() {
