@@ -28,8 +28,8 @@ export default function PromptForm({
       <Message sender="replicate" isSameSender>
         <label htmlFor="prompt-input">
           {isFirstPrompt
-            ? "What should we change?"
-            : "What should we change now?"}
+            ? "点击一键脱衣试试?"
+            : "也可以上传自己的照片"}
         </label>
       </Message>
 
@@ -52,7 +52,7 @@ export default function PromptForm({
             className="bg-black text-white rounded-r-md text-small inline-block p-3 flex-none"
             type="submit"
           >
-            Paint
+            一键脱衣
           </button>
         )}
       </div>

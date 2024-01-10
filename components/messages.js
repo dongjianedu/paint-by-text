@@ -41,8 +41,7 @@ export default function Messages({ events, isProcessing, onUndo }) {
                         onUndo(index);
                       }}
                     >
-                      <UndoIcon className="icon" /> Undo and try a different
-                      change
+                      <UndoIcon className="icon" /> 撤销
                     </button>
                   </div>
                 )}
@@ -51,8 +50,8 @@ export default function Messages({ events, isProcessing, onUndo }) {
               {(isProcessing || index < events.length - 1) && (
                 <Message sender="replicate" isSameSender>
                   {index === 0
-                    ? "What should we change?"
-                    : "What should we change now?"}
+                    ? "点击一键脱衣试试?"
+                    : "也可以上传自己的照片"}
                 </Message>
               )}
             </Fragment>

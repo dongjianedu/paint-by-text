@@ -24,6 +24,14 @@ const nextConfig = {
         protocol: "https",
         hostname: "pics0.baidu.com",
       },
+      {
+        protocol: "https",
+        hostname: "zhanyin.s3.us-east-1.amazonaws.com",
+      },
+      {
+        protocol: "https",
+        hostname: "f005.backblazeb2.com",
+      }
     ],
   },
   async redirects() {

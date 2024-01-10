@@ -23,10 +23,10 @@ export default async function handler(req, res) {
   );
 
   let prediction
-  const response = await fetch(`${API_HOST}/v1/predictions/123`, {
+  const response = await fetch(`${API_HOST}/run`, {
     method: 'POST',
     headers: {
-      Authorization: `Token ${process.env.REPLICATE_API_TOKEN}`,
+      Authorization: `Bearer ${process.env.REPLICATE_API_TOKEN}`,
       "Content-Type": "application/json"
     },
     body:  JSON.stringify({ input: req.body })

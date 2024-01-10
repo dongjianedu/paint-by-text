@@ -70,11 +70,16 @@ export default function Home() {
       return;
     }
 
+    if (body.image.startsWith('http')) {
+      prediction.id = 'local_demo';
+    }
+
     while (
-      prediction.status !== "succeeded" &&
+      prediction.status !== "COMPLETED" &&
       prediction.status !== "failed"
     ) {
       await sleep(500);
+
       const response = await fetch("/api/predictions/" + prediction.id);
       prediction = await response.json();
       if (response.status !== 200) {
@@ -85,10 +90,10 @@ export default function Home() {
       // just for bookkeeping
       setPredictions(predictions.concat([prediction]));
 
-      if (prediction.status === "succeeded") {
+      if (prediction.status === "COMPLETED") {
         setEvents(
           myEvents.concat([
-            { image: prediction.output?.[prediction.output.length - 1] },
+            { image: prediction.output},
           ])
         );
       }

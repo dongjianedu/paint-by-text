@@ -1,9 +1,15 @@
 const API_HOST = process.env.REPLICATE_API_HOST || "https://api.replicate.com";
 
 export default async function handler(req, res) {
-  const response = await fetch(`${API_HOST}/v1/predictions/${req.query.id}`, {
+  if (req.query.id === "local_demo") {
+    // Return your desired result here
+    await new Promise(resolve => setTimeout(resolve, 5000));
+    res.end(JSON.stringify({ status: "COMPLETED" , output: "https://f005.backblazeb2.com/file/demo-image/after.png"}));
+    return;
+  }
+  const response = await fetch(`${API_HOST}/status/${req.query.id}`, {
     headers: {
-      Authorization: `Token ${process.env.REPLICATE_API_TOKEN}`,
+      Authorization: `Bearer ${process.env.REPLICATE_API_TOKEN}`,
       "Content-Type": "application/json",
     },
   });
