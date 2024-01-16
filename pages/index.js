@@ -2,17 +2,22 @@ import Messages from "components/messages";
 import PromptForm from "components/prompt-form";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-
+import { useRouter } from 'next/router';
 import Footer from "components/footer";
-
 import prepareImageFileForUpload from "lib/prepare-image-file-for-upload";
 import { getRandomSeed } from "lib/seeds";
+import Cookies from 'js-cookie';
 
+
+function generateRandomString() {
+  return Math.random().toString(36).substring(2, 8);
+}
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 export const appName = "美女脱脱脱";
 export const appSubtitle = "上传美女照片，AI帮你脱衣服";
 export const appMetaDescription = "Edit your photos using written instructions, with the help of an AI.";
+export const url_filter = "zhanyin";
 
 export default function Home() {
   const [events, setEvents] = useState([]);
@@ -21,7 +26,30 @@ export default function Home() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [seed] = useState(getRandomSeed());
   const [initialPrompt, setInitialPrompt] = useState(seed.prompt);
+  const [api_status, setApiStatus] = useState("DEMO");
 
+  const router = useRouter()
+  const [srid, setSrid] = useState(null);
+  const [share_id, setShareId] = useState(null);
+  const [shaer_km, setShareKm] = useState(null);
+
+  useEffect(() => {
+    let sid = Cookies.get('sid');
+    if (!sid) {
+      let sid = generateRandomString();
+      let km = generateRandomString();
+      setShareId(sid);
+      setShareKm(km);
+      Cookies.set('sid', sid);
+      Cookies.set('km', 'kms'+km);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (router.isReady) {
+      setSrid(router.query.sid);
+    }
+  }, [router.isReady, router.query]);
   // set the initial image from a random seed
   useEffect(() => {
     setEvents([{ image: seed.image }]);
@@ -37,11 +65,12 @@ export default function Home() {
     setEvents(events.concat([{ image }]));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e,selectValue) => {
     e.preventDefault();
 
     const prompt = e.target.prompt.value;
     const lastImage = events.findLast((ev) => ev.image)?.image;
+    const type = selectValue;
 
     setError(null);
     setIsProcessing(true);
@@ -54,6 +83,7 @@ export default function Home() {
     const body = {
       prompt,
       image: lastImage,
+      srid,
     };
 
     const response = await fetch("/api/predictions", {
@@ -63,25 +93,28 @@ export default function Home() {
       },
       body: JSON.stringify(body),
     });
-    let prediction = await response.json();
 
+    let prediction = await response.json();
+    if(prediction.id === "need_charge")
+    {
+      setEvents(
+          myEvents.concat([
+            { status: "need_charge"},
+          ])
+      );
+    }
     if (response.status !== 201) {
       setError(prediction.detail);
       return;
     }
-
-    if (body.image.startsWith('http')) {
-      prediction.id = 'local_demo';
-    }
-
     while (
-      prediction.status !== "COMPLETED" &&
+      prediction.status !== "COMPLETED" && prediction.status !=="COMPLETED_Cookie"  && prediction.status !== "DEMO" &&
       prediction.status !== "failed"
     ) {
       await sleep(500);
-
       const response = await fetch("/api/predictions/" + prediction.id);
       prediction = await response.json();
+      setApiStatus(prediction.status);
       if (response.status !== 200) {
         setError(prediction.detail);
         return;
@@ -89,11 +122,16 @@ export default function Home() {
 
       // just for bookkeeping
       setPredictions(predictions.concat([prediction]));
-
-      if (prediction.status === "COMPLETED") {
+      if (prediction.status === "COMPLETED" || prediction.status === "DEMO" || prediction.status === "COMPLETED_Cookie") {
+          const image_not_blur = prediction.output[1];
+          if(image_not_blur.includes(url_filter))
+            {
+              let encodedImage = btoa(image_not_blur);
+              document.cookie = `last_image=${encodedImage}; path=/`;
+            }
         setEvents(
           myEvents.concat([
-            { image: prediction.output},
+            { image: prediction.output[0],status: prediction.status, share_num: prediction.share_num},
           ])
         );
       }
@@ -144,6 +182,7 @@ export default function Home() {
           isFirstPrompt={events.length === 1}
           onSubmit={handleSubmit}
           disabled={isProcessing}
+          status={api_status}
         />
 
         <div className="mx-auto w-full">

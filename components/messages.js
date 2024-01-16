@@ -3,9 +3,27 @@ import Image from "next/image";
 import { Fragment, useEffect, useRef } from "react";
 import PulseLoader from "react-spinners/PulseLoader";
 import Message from "./message";
-
+import Cookies from 'js-cookie';
 export default function Messages({ events, isProcessing, onUndo }) {
   const messagesEndRef = useRef(null);
+  let fullAddress;
+  let protocol;
+
+  if (typeof window !== 'undefined') {
+    const domainName = window.location.hostname;
+    const port = window.location.port;
+    fullAddress = domainName;
+
+    if (port) {
+      fullAddress = `${domainName}:${port}`;
+    }
+
+    protocol = window.location.protocol;
+  }
+  const fullUrl = `${protocol}//${fullAddress}`;
+  const sid = Cookies.get('sid');
+  const km = Cookies.get('km');
+
 
   useEffect(() => {
     if (events.length > 2) {
@@ -47,15 +65,36 @@ export default function Messages({ events, isProcessing, onUndo }) {
                 )}
               </Message>
 
-              {(isProcessing || index < events.length - 1) && (
+              {ev.status==="DEMO" && isProcessing || index < events.length - 1   && (
                 <Message sender="replicate" isSameSender>
                   {index === 0
-                    ? "点击一键脱衣试试?"
-                    : "也可以上传自己的照片"}
+                    ? "点击一键脱衣试试?2"
+                    : "也可以上传自己的照片2"}
                 </Message>
               )}
+              {(ev.status==="COMPLETED") && (
+                  <Message  sender="replicate" isSameSender>
+                   {`请输入卡密获取下载链接，购买卡密请查看购买说明,
+                           也可以通过分享链接获取卡密，专属分享链接：${fullUrl}/?sid=${sid} 
+                           专属免费卡密：${km} ，每分享成功一次，该卡密使用次数+1`}
+                  </Message>
+              )}
+              {(ev.status==="COMPLETED_Cookie") && (
+                  <Message  sender="replicate" isSameSender>
+                    {ev.share_num ? `点击左下角下载图片，你的分享卡密 ${km} 余额还剩${ev.share_num}次` : "点击左下角下载图片"}
+                  </Message>
+              )}
+
             </Fragment>
           );
+        }
+        if(ev.status==="need_charge")
+        {
+          return (
+                <Message key={index} sender="replicate" isSameSender>
+                  {`卡密无效：已被使用过或额度不够赶紧，购买或增加分享 专属分享链接：${fullUrl}/?sid=${sid}  专属免费卡密：${km} 每分享成功一次，该卡密使用次数+1`}
+                </Message>
+            );
         }
 
         if (ev.prompt) {

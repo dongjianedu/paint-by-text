@@ -11,9 +11,9 @@ export default function Footer({ events, startOver, handleImageDropped }) {
   return (
     <footer className="w-full my-8">
       <div className="text-center">
-        <Link href="/about" className="lil-button">
+        <Link href="https://we.ldfk88.top///links/EB7A7EC4" className="lil-button" target="_blank">
 
-          <InfoIcon className="icon" />使用说明?
+          <InfoIcon className="icon" />购买卡密
         </Link>
 
         {events.length > 1 && (
