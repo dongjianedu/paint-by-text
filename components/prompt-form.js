@@ -52,8 +52,8 @@ export default function PromptForm({
       {  status==="DEMO" && (<Message sender="replicate" isSameSender>
             <label htmlFor="prompt-input">
               {isFirstPrompt
-                  ? "点击一键脱衣试试?1"
-                  : "也可以上传自己的照片1"}
+                  ? "点击一键脱衣试试?"
+                  : "也可以上传自己的照片"}
             </label>
           </Message>)
       }

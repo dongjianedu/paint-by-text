@@ -68,8 +68,8 @@ export default function Messages({ events, isProcessing, onUndo }) {
               {ev.status==="DEMO" && isProcessing || index < events.length - 1   && (
                 <Message sender="replicate" isSameSender>
                   {index === 0
-                    ? "点击一键脱衣试试?2"
-                    : "也可以上传自己的照片2"}
+                    ? "点击一键脱衣试试?"
+                    : "也可以上传自己的照片"}
                 </Message>
               )}
               {(ev.status==="COMPLETED") && (
