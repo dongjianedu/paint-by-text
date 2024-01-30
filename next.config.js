@@ -31,7 +31,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "f005.backblazeb2.com",
-      }
+      },{
+        protocol: "http",
+        hostname: "127.0.0.1",
+      },
     ],
   },
   async redirects() {
