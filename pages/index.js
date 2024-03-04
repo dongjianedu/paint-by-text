@@ -14,8 +14,8 @@ function generateRandomString() {
 }
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-export const appName = "美女脱脱脱";
-export const appSubtitle = "上传美女照片，AI帮你脱衣服";
+export const appName = "美女换换衣";
+export const appSubtitle = "上传美女照片，AI帮你'换'衣服";
 export const appMetaDescription = "Edit your photos using written instructions, with the help of an AI.";
 export const url_filter = "zhanyin";
 
@@ -24,6 +24,7 @@ export default function Home() {
   const [predictions, setPredictions] = useState([]);
   const [error, setError] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [queuePosition, setQueuePosition] = useState(0);
   const [seed] = useState(getRandomSeed());
   const [initialPrompt, setInitialPrompt] = useState(seed.prompt);
   const [api_status, setApiStatus] = useState("DEMO");
@@ -114,6 +115,7 @@ export default function Home() {
       await sleep(500);
       const response = await fetch("/api/predictions/" + prediction.id);
       prediction = await response.json();
+      setQueuePosition(prediction.queue_position);
       setApiStatus(prediction.status);
       if (response.status !== 200) {
         setError(prediction.detail);
@@ -131,7 +133,7 @@ export default function Home() {
             }
         setEvents(
           myEvents.concat([
-            { image: prediction.output[0],status: prediction.status, share_num: prediction.share_num},
+            { image: prediction.output[0],status: prediction.status, share_num: prediction.share_num,queue_position:prediction.queue_position},
           ])
         );
       }
@@ -169,6 +171,7 @@ export default function Home() {
         <Messages
           events={events}
           isProcessing={isProcessing}
+          queuePosition={queuePosition}
           onUndo={(index) => {
             setInitialPrompt(events[index - 1].prompt);
             setEvents(

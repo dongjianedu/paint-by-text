@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     // Return your desired result here
     await new Promise(resolve => setTimeout(resolve, 5000));
     res.end(JSON.stringify({ status: "DEMO" ,
-      output: ["https://f005.backblazeb2.com/file/demo-image/after.png","https://f005.backblazeb2.com/file/demo-image/after.png"]
+      output: ["https://f005.backblazeb2.com/file/demo-image/ai_after.png","https://f005.backblazeb2.com/file/demo-image/ai_after.png"]
     }));
     return;
   }
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     console.log(share_num);
     // Set the 'last_image' value to 'events'
     res.end(JSON.stringify({ status: "COMPLETED_Cookie" ,
-      output: [decodedImage,"https://f005.backblazeb2.com/file/demo-image/after.png"],
+      output: [decodedImage,"https://f005.backblazeb2.com/file/demo-image/ai_after.png"],
       share_num:share_num
     }));
 

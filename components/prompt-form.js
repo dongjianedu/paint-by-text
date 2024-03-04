@@ -9,7 +9,7 @@ export default function PromptForm({
   status,
 }) {
   const [prompt, setPrompt] = useState(initialPrompt);
-  const [placeholder, setPlaceholder] = useState("不用输入，直接点击一键脱衣-->");
+  const [placeholder, setPlaceholder] = useState("输入想换的衣服，比方比基尼，然后直接点击一键换衣-->");
   const [selectValue, setSelectValue] = useState("");
   useEffect(() => {
     console.log("status",status)
@@ -52,8 +52,8 @@ export default function PromptForm({
       {  status==="DEMO" && (<Message sender="replicate" isSameSender>
             <label htmlFor="prompt-input">
               {isFirstPrompt
-                  ? "点击一键脱衣试试?"
-                  : "也可以上传自己的照片"}
+                  ? "点击一键换衣试试?"
+                  : "也可以上传自己的照片,禁止使用'脱光'，'裸体'等不雅词汇"}
             </label>
           </Message>)
       }
@@ -85,7 +85,7 @@ export default function PromptForm({
             className="bg-black text-white rounded-r-md text-small inline-block p-3 flex-none"
             type="submit"
           >
-            一键脱衣
+            一键换衣
           </button>
         )}
       </div>

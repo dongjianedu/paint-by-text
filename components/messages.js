@@ -4,7 +4,7 @@ import { Fragment, useEffect, useRef } from "react";
 import PulseLoader from "react-spinners/PulseLoader";
 import Message from "./message";
 import Cookies from 'js-cookie';
-export default function Messages({ events, isProcessing, onUndo }) {
+export default function Messages({ events, isProcessing,queuePosition, onUndo }) {
   const messagesEndRef = useRef(null);
   let fullAddress;
   let protocol;
@@ -68,8 +68,8 @@ export default function Messages({ events, isProcessing, onUndo }) {
               {ev.status==="DEMO" && isProcessing || index < events.length - 1   && (
                 <Message sender="replicate" isSameSender>
                   {index === 0
-                    ? "点击一键脱衣试试?"
-                    : "也可以上传自己的照片"}
+                    ? "点击一键换衣试试?"
+                    : "也可以上传自己的照片,禁止使用'脱光'，'裸体'等不雅词汇"}
                 </Message>
               )}
               {(ev.status==="COMPLETED") && (
@@ -109,6 +109,7 @@ export default function Messages({ events, isProcessing, onUndo }) {
       {isProcessing && (
         <Message sender="replicate">
           <PulseLoader color="#999" size={7} />
+          {queuePosition > 0 ? `前面还有${queuePosition}人在排队，不想排队？试试vip通道` : `正在处理中`}
         </Message>
       )}
 
