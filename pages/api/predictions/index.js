@@ -124,6 +124,42 @@ async function handlePrompt(promptContent) {
 export default async function handler(req, res) {
   const cookies = cookie.parse(req.headers.cookie || '');
   const body = req.body;
+  console.log("body.srid:");
+  console.log(body.srid);
+  //核销srid，就是把srid作为kami来使用
+    if(body.srid)
+    {
+        const key = body.srid;
+        let kmKey = await KV.readKey({ key, namespaceId });
+        console.log("kmKey:");
+        console.log(kmKey);
+        if(kmKey.result !== null)
+        {
+            let share_num =  parseInt(kmKey);
+            if(share_num>0)
+            {
+                share_num = share_num -1;
+                KV.writeKey({ key, value: share_num.toString(),namespaceId });
+            }else
+            {
+                res.statusCode = 201;
+                res.end(JSON.stringify({ id: 'need_charge', status: 'COMPLETED' }));
+                return;
+            }
+        }else
+        {
+            res.statusCode = 201;
+            res.end(JSON.stringify({ id: 'need_charge', status: 'COMPLETED' }));
+            return;
+        }
+    }else
+    {
+        res.statusCode = 201;
+        res.end(JSON.stringify({ id: 'need_charge', status: 'COMPLETED' }));
+        return;
+    }
+
+
   // 核销付费卡密
   if (body.prompt.startsWith('kmp'))
   {

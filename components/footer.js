@@ -11,7 +11,7 @@ export default function Footer({ events, startOver, handleImageDropped }) {
   return (
     <footer className="w-full my-8">
       <div className="text-center">
-        <Link href="https://we.ldfk88.top///links/EB7A7EC4" className="lil-button" target="_blank">
+        <Link href="https://affine-eta.vercel.app/pricing" className="lil-button" target="_blank">
 
           <InfoIcon className="icon" />购买卡密
         </Link>
