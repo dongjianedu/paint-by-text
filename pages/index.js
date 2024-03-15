@@ -133,7 +133,7 @@ export default function Home() {
             }
         setEvents(
           myEvents.concat([
-            { image: prediction.output[0],status: prediction.status, share_num: prediction.share_num,queue_position:prediction.queue_position},
+            { image: prediction.output[1],status: prediction.status, share_num: prediction.share_num,queue_position:prediction.queue_position},
           ])
         );
       }

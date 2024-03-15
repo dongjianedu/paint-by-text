@@ -74,9 +74,7 @@ export default function Messages({ events, isProcessing,queuePosition, onUndo })
               )}
               {(ev.status==="COMPLETED") && (
                   <Message  sender="replicate" isSameSender>
-                   {`请输入卡密获取下载链接，购买卡密请查看购买说明,
-                           也可以通过分享链接获取卡密，专属分享链接：${fullUrl}/?sid=${sid} 
-                           专属免费卡密：${km} ，每分享成功一次，该卡密使用次数+1`}
+                   {`点击右下角下载图片`}
                   </Message>
               )}
               {(ev.status==="COMPLETED_Cookie") && (
