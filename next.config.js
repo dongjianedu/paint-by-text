@@ -26,7 +26,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "zhanyin.s3.us-east-1.amazonaws.com",
+        hostname: "tuoyifu.s3.us-east-1.amazonaws.com",
       },
       {
         protocol: "https",
